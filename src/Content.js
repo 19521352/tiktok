@@ -15,11 +15,11 @@ import { useEffect, useState } from "react";
 const tabs = ['posts', 'comments', 'albums', 'photos', 'todos', 'users']
 
 function Content() {
+
+  /* Tab content */
   const [title, setTitle] = useState('')
   const [posts, setPosts] = useState([])
   const [type, setType] = useState('posts')
-  const [showGoToTop, setShowGoToTop] = useState(false)
-  const [size, setSize] = useState({ width: window.innerWidth, height: window.innerHeight })
 
   useEffect(() => {
     fetch(`https://jsonplaceholder.typicode.com/${type}`)
@@ -28,6 +28,10 @@ function Content() {
         setPosts(posts)
       })
   }, [type])
+  /* End Tab content */
+
+  /* Go to top button */
+  const [showGoToTop, setShowGoToTop] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,6 +45,10 @@ function Content() {
       window.removeEventListener('scroll', handleScroll)
     }
   }, [])
+  /* End Go to top button */
+
+  /* Screen resize */
+  const [size, setSize] = useState({ width: window.innerWidth, height: window.innerHeight })
 
   useEffect(() => {
     const handleResize = () => {
@@ -53,35 +61,60 @@ function Content() {
       window.removeEventListener('resize', handleResize)
     }
   }, [])
+  /* End Screen resize */
+
+  /* Timer */
+  const [countdown, setCountdown] = useState(180)
+  useEffect(() => {
+    const timerId = setInterval(() => {
+      setCountdown(prevState => prevState - 1)
+      console.log('Countdown....')
+    }, 1000)
+
+    return () => clearInterval(timerId)
+  }, [])
+  /* End Timer */
+
 
   return (
 
     <div>
-      <h1>width: {size.width}px, height: {size.height}px</h1>
-      {tabs.map(tab => (
-        <button
-          key={tab}
-          style={type === tab ? {
-            color: '#fff',
-            background: '#333'
-          } : {}}
-          onClick={() => setType(tab)}
-        >
-          {tab}
-        </button>
-      ))}
-      <input
-        value={title}
-        onChange={e => setTitle(e.target.value)}
-      />
-      <ul>
-        {posts.map(post => (
-          <li key={post.id}>
-            <h2>{post.title || post.name}</h2>
-            <p>{post.body}</p>
-          </li>
+      <div>
+        <h1>Timer</h1>
+        <h2>{countdown}</h2>
+      </div>
+      <div>
+        <h1>Screen size</h1>
+        <h2>width: {size.width}px, height: {size.height}px</h2>
+      </div>
+      <div>
+        <h1>Content</h1>
+        {tabs.map(tab => (
+          <button
+            key={tab}
+            style={type === tab ? {
+              color: '#fff',
+              background: '#333'
+            } : {}}
+            onClick={() => setType(tab)}
+          >
+            {tab}
+          </button>
         ))}
-      </ul>
+        <input
+          value={title}
+          onChange={e => setTitle(e.target.value)}
+        />
+        <ul>
+          {posts.map(post => (
+            <li key={post.id}>
+              <h2>{post.title || post.name}</h2>
+              <p>{post.body}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+
       {showGoToTop && (
         <button
           style={{
