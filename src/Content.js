@@ -1,5 +1,28 @@
 import { useEffect, useState } from "react";
 
+// Side effects
+
+// Events: Add/remove event listener
+// Observer pattern: Subscribe/Unsubcribe
+// Closure
+// Timer: setInterval, setTimeout, clearInterval, clearTimeout
+// useState
+// Mouted/unmounted
+// ===
+// Call API
+
+/**
+ * 1. Update DOM
+ *  - F8 blog title
+ * 2. Call API
+ * 3. Listen DOM events
+ *  - Scroll
+ *  - Resize
+ * 4. Cleanup
+ *  - Remove listener/Unsubscribe
+ *  - Clear timers
+ */
+
 // 1. useEffect(callback)
 // - Gọi callback mỗi khi component re-render
 // - Gọi callback sau khi component thêm element vào DOM
@@ -14,13 +37,28 @@ import { useEffect, useState } from "react";
 // 3. Cleanup function luôn được gọi TRƯỚC khi callback được gọi (trừ lần mounted)
 
 const tabs = ['posts', 'comments', 'albums', 'photos', 'todos', 'users']
+const lessons = [
+  {
+    id: 1,
+    name: 'ReactJS là gì? Tại sao nên học ReactJS'
+  },
+  {
+    id: 2,
+    name: 'SPA/MPA là gì?'
+  },
+  {
+    id: 3,
+    name: 'Arrow function'
+  }
+
+]
 
 function Content() {
 
   /* Tab content */
   const [title, setTitle] = useState('')
   const [posts, setPosts] = useState([])
-  const [type, setType] = useState('posts')
+  const [type, setType] = useState('users')
 
   useEffect(() => {
     fetch(`https://jsonplaceholder.typicode.com/${type}`)
@@ -91,12 +129,45 @@ function Content() {
     const file = e.target.files[0]
     file.preview = URL.createObjectURL(file)
     setAvatar(file)
+
   }
   /* End Preview avatar */
+
+  /* Fake Chat App */
+  const [lessonId, setLessonId] = useState(1)
+  useEffect(() => {
+    const handleComment = ({ detail }) => {
+      console.log(detail)
+    }
+    window.addEventListener(`lesson-${lessonId}`, handleComment)
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener(`lesson-${lessonId}`, handleComment)
+    }
+  }, [lessonId])
+  /* End fake Chat App */
+
 
   return (
 
     <div>
+      <div>
+        <h1>Fake Chat App</h1>
+        <ul>
+          {lessons.map(lesson => (
+            <li
+              key={lesson.id}
+              style={{
+                color: lessonId === lesson.id ? 'red' : '#333'
+              }}
+              onClick={() => setLessonId(lesson.id)}
+            >
+              {lesson.name}
+            </li>
+          ))}
+        </ul>
+      </div>
       <div>
         <h1>Preview avatar</h1>
         <input
