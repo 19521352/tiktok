@@ -9,8 +9,9 @@ import { useEffect, useState } from "react";
 // - Callback sẽ được gọi lại mỗi khi deps thay đổi
 
 // ------------
-// 1. Callback luôn được gọi sau khi component mounted
-// 2, Cleanup function luôn được gọi sau khi component unmounted
+// 1. Callback luôn được gọi SAU khi component mounted
+// 2. Cleanup function luôn được gọi TRƯỚC khi component unmounted
+// 3. Cleanup function luôn được gọi TRƯỚC khi callback được gọi (trừ lần mounted)
 
 const tabs = ['posts', 'comments', 'albums', 'photos', 'todos', 'users']
 
@@ -65,20 +66,47 @@ function Content() {
 
   /* Timer */
   const [countdown, setCountdown] = useState(180)
-  useEffect(() => {
-    const timerId = setInterval(() => {
-      setCountdown(prevState => prevState - 1)
-      console.log('Countdown....')
-    }, 1000)
+  // useEffect(() => {
+  //   const timerId = setInterval(() => {
+  //     setCountdown(prevState => prevState - 1)
+  //     // console.log('Countdown....')
+  //   }, 1000)
 
-    return () => clearInterval(timerId)
-  }, [])
+  //   // Cleanup function
+  //   return () => clearInterval(timerId)
+  // }, [])
   /* End Timer */
 
+  /* Preview avatar */
+  const [avatar, setAvatar] = useState()
+
+  useEffect(() => {
+    // Cleanup
+    return () => {
+      avatar && URL.revokeObjectURL(avatar.preview)
+    }
+  }, [avatar])
+
+  const handlePreviewAvatar = (e) => {
+    const file = e.target.files[0]
+    file.preview = URL.createObjectURL(file)
+    setAvatar(file)
+  }
+  /* End Preview avatar */
 
   return (
 
     <div>
+      <div>
+        <h1>Preview avatar</h1>
+        <input
+          type='file'
+          onChange={handlePreviewAvatar}
+        />
+        {avatar && (
+          <img src={avatar.preview} alt='' width='80%' />
+        )}
+      </div>
       <div>
         <h1>Timer</h1>
         <h2>{countdown}</h2>
@@ -115,18 +143,20 @@ function Content() {
         </ul>
       </div>
 
-      {showGoToTop && (
-        <button
-          style={{
-            position: 'fixed',
-            right: 20,
-            bottom: 20
-          }}
-        >
-          Go to Top
-        </button>
-      )}
-    </div>
+      {
+        showGoToTop && (
+          <button
+            style={{
+              position: 'fixed',
+              right: 20,
+              bottom: 20
+            }}
+          >
+            Go to Top
+          </button>
+        )
+      }
+    </div >
   )
 }
 
