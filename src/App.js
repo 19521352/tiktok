@@ -1,46 +1,32 @@
-import { useRef, useState, useEffect } from 'react'
+import { useState } from 'react'
+import Content from './Content'
 
-// Lưu giữ cấc giá trị qua một tham chiếu bên ngoài
-// Function Component
+// 1. memo() -> Higher Order Component (HOC)
+// 2. useCallback()
 
 function App() {
-  const [count, setCount] = useState(60)
+  const [count, setCount] = useState(0)
+  const [count2, setCount2] = useState(0)
 
-  const timerId = useRef()
-  const prevCount = useRef()
-  const h1Ref = useRef()
-
-  useEffect(() => {
-    prevCount.current = count
-  }, [count])
-
-  useEffect(() => {
-    const rect = h1Ref.current.getBoundingClientRect()
-
-    console.log(rect)
-  })
-
-  const handleStart = () => {
-    timerId.current = setInterval(() => {
-      setCount(prevCount => prevCount - 1)
-    }, 1000)
+  const increase = () => {
+    setCount(count + 1)
   }
 
-  const handleStop = () => {
-    clearInterval(timerId.current)
+  const increase2 = () => {
+    setCount2(count2 + 1)
   }
-
-  console.log(count, prevCount.current)
 
   return (
 
     <div style={{ padding: 20 }}>
-      <h1 ref={h1Ref}>{count}</h1>
-      <button onClick={handleStart}>Start</button>
-      <button onClick={handleStop}>Stop</button>
+      <Content count={count} />
+      <h1>{count}</h1>
+      <button onClick={increase}>Click me!</button>
+      <h1>{count2}</h1>
+      <button onClick={increase2}>Click me 2!</button>
     </div >
   )
 
 }
 
-export default App;
+export default App
