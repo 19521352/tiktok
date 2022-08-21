@@ -1,10 +1,15 @@
 import { memo } from "react";
+import { useState } from 'react'
 
 
-function Content({ count }) {
+function Content({ onIncrease }) {
+
   console.log('Re-render')
   return (
-    <h2>HELLO Anh em {count}</h2>
+    <>
+      <h2>HELLO Anh em</h2>
+      <button onClick={onIncrease}>Click me!</button>
+    </>
   )
 }
 
