@@ -1,7 +1,30 @@
-import TodoApp from './Todo'
+import { useContext } from 'react'
+import { ThemeContext } from './ThemeContext'
+import Content from './Content'
+import './App.css'
+
+
+// Normal
+// CompA => CompB => CompC
+// Context
+// CompA => CompC
+
+/**
+ * 1. Create context
+ * 2. Provider
+ * 3. Consumer
+ */
+
+// Theme: Dark / Light
 
 function App() {
-  return <TodoApp />
+  const context = useContext(ThemeContext)
+  return (
+    <div style={{ padding: 20 }}>
+      <button onClick={context.toggleTheme}>Toggle theme</button>
+      <Content />
+    </div>
+  )
 }
 
 export default App
