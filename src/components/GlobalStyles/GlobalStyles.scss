@@ -1,0 +1,17 @@
+@import 'normalize.css';
+@import url('https://use.typekit.net/gjh1nbr.css');
+
+:root {
+    --primary: #fe2c55;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-family: ibm-plex-sans, sans-serif;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    text-rendering: optimizeSpeed;
+}
