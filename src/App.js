@@ -1,22 +1,31 @@
-import { useRef } from "react";
-import Video from './Video'
+import { Routes, Route, Link } from 'react-router-dom'
+import HomePage from './pages/Home'
+import NewsPage from './pages/News'
+import ContactPage from './pages/Contact'
 
 function App() {
-  const videoRef = useRef()
-
-  const handlePlay = () => {
-    videoRef.current.play()
-  }
-
-  const handlePause = () => {
-    videoRef.current.pause()
-  }
 
   return (
-    <div>
-      <Video ref={videoRef} />
-      <button onClick={handlePlay}>Play</button>
-      <button onClick={handlePause}>Pause</button>
+    <div className='app'>
+      <nav>
+        <ul>
+          <li>
+            <Link to='/'>Home</Link>
+          </li>
+          <li>
+            <Link to='/news'>News</Link>
+          </li>
+          <li>
+            <Link to='/contact'>Contact</Link>
+          </li>
+        </ul>
+      </nav>
+
+      <Routes>
+        <Route path='/' element={<HomePage />} />
+        <Route path='/news' element={<NewsPage />} />
+        <Route path='/contact' element={<ContactPage />} />
+      </Routes>
     </div>
   )
 }
